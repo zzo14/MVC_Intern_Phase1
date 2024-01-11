@@ -1,0 +1,15 @@
+/* NavBar.css */
+.custom-navbar {
+    background-color: #333;
+    border: none;
+    margin: 0; /* Reset default margins if necessary */
+}
+
+.custom-navbar .item {
+    color: white; /* Override default text color */
+}
+
+/* Active item styles */
+.custom-navbar .item.active {
+    background-color: #444; /* Slightly lighter than the menu background for contrast */
+}
