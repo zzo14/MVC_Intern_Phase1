@@ -20,13 +20,18 @@ import {
 } from "semantic-ui-react";
 
 function CustomerContainer() {
+    //use custom hook to handle CRUD operations
     const { add, update, remove, loading, error, setErrorState, setLoadingState } = useCRUDOperations('https://localhost:7293/api/customer');
+
+    //state management for modals, customers data, and current/new customer details
     const [createModal, setCreateModal] = useState(false);
     const [editModal, setEditModal] = useState(false);
     const [deleteModal, setDeleteModal] = useState(false);
     const [customers, setCustomers] = useState([]);
     const [currentCustomer, setCurrentCustomer] = useState({name: "",address: "" });
     const [newCustomer, setNewCustomer] = useState({ name: "", address: "" });
+
+    //use custom hook to handle sorting and pagination
     const {
         sortedData: sortedCustomers,
         currentPage,
@@ -37,7 +42,7 @@ function CustomerContainer() {
         sortDirection,
         handleSort} = useSortedPaginatedData(customers);
 
-
+    // Fetch customer data on component mount or when pagination/sorting changes
     useEffect(() => {
         const fetchData = async () => {
             setLoadingState(true);
@@ -54,9 +59,11 @@ function CustomerContainer() {
         fetchData();
     }, [currentPage, pageSize]);
 
+    //function to handle adding a new customer
     const handleAddCustomer = async () => {
         add(newCustomer,
             (responseId) => {
+                //update the new customer to the customers array
                 const addedCustomer = { ...newCustomer, id: responseId };
                 setCustomers(prevCustomers => [...prevCustomers, addedCustomer]);
                 setCreateModal(false);
@@ -64,6 +71,7 @@ function CustomerContainer() {
         );
     };
 
+    //function to handle updating a customer, same as adding a new customer but with a different callback
     const handleUpdateCustomer = async () => {
         update(newCustomer,
             () => {
@@ -78,17 +86,18 @@ function CustomerContainer() {
         );
     };
 
+    //function to handle deleting a customer, same as adding a new customer but with a different callback
     const handleDeleteCustomer = async () => {
         remove(currentCustomer.id,
             () => {
                 setCustomers(prevCustomers => {
                     const updatedCustomers = prevCustomers.filter(customer => customer.id !== currentCustomer.id)
-
+                    // if the last customer on the last page is deleted, go back to the previous page
                     const totalPages = Math.ceil(updatedCustomers.length / pageSize);
                     if (currentPage >= totalPages) {
+                        // to avoid going to negative page numbers
                         setCurrentPage(totalPages > 0 ? totalPages - 1 : 0); 
                     }
-
                     return updatedCustomers;
                 });
                 setDeleteModal(false);
@@ -96,23 +105,27 @@ function CustomerContainer() {
         );
     };
 
+    //to open modals and set the new customer details
     const openCreateModal = () => {
         setNewCustomer({ name: "", address: "" });
         setCreateModal(true);
     };
 
+    //to open edit modal and set the current/new customer details
     const openEditModal = (customer) => {
         setCurrentCustomer(customer);
         setNewCustomer(customer);
         setEditModal(true);
     };
 
+    //to open delete modal and set the current/new customer details
     const openDeleteModal = (customer) => {
         setCurrentCustomer(customer);
         setNewCustomer(customer);
         setDeleteModal(true);
     };
 
+    //handle change in input fields
     const handleChange = (e, data) => {
         const { name, value } = data || e.target;
         setNewCustomer(prevState => ({
@@ -195,6 +208,7 @@ function CustomerContainer() {
                 </TableFooter>
             </Table>
 
+            {/* Create Customer Modal */}
             <Modal
                 onClose={() => setCreateModal(false)}
                 onOpen={() => setCreateModal(true)}
@@ -234,6 +248,7 @@ function CustomerContainer() {
                 </ModalActions>
             </Modal>
 
+            {/* Edit Customer Modal */}
             <Modal
                 onClose={() => setEditModal(false)}
                 onOpen={() => setEditModal(true)}
@@ -269,6 +284,7 @@ function CustomerContainer() {
                 </ModalActions>
             </Modal>
 
+            {/* Delete Confirmation Modal */}
             <Modal
                 onClose={() => setDeleteModal(false)}
                 onOpen={() => setDeleteModal(true)}

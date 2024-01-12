@@ -22,7 +22,10 @@ import {
 } from "semantic-ui-react";
 
 function SalesContainer() {
+    //use custom hook to handle CRUD operations
     const { add, update, remove, loading, error, setErrorState, setLoadingState } = useCRUDOperations('https://localhost:7293/api/sales');
+
+    //state management for modals, data, and current/new sale details
     const [createModal, setCreateModal] = useState(false);
     const [editModal, setEditModal] = useState(false);
     const [deleteModal, setDeleteModal] = useState(false);
@@ -60,6 +63,7 @@ function SalesContainer() {
         sortDirection,
         handleSort } = useSortedPaginatedData(sales);
 
+    //fetch data from api
     useEffect(() => {
         const fetchData = async () => {
             setLoadingState(true);
@@ -82,11 +86,11 @@ function SalesContainer() {
                 const response = await axios.get("https://localhost:7293/api/sales");
                 const salesData = response.data;
 
+                //map sales data to include customer, product, and store names
                 const updatedData = salesData.map(sale => {
                     const customer = customersData.find(c => c.id === sale.customerId);
                     const product = productsData.find(p => p.id === sale.productId);
                     const store = storesData.find(s => s.id === sale.storeId);
-
                     return {
                         ...sale,
                         customer: customer ? customer.name : 'Unknown',
@@ -107,10 +111,10 @@ function SalesContainer() {
         const dateFormattedSale = formatDateSale(newSale);
         add(dateFormattedSale,
             (responseId) => {
+                //get customer, product, and store names from options, and add them to new sale
                 const customerName = customerOptions.find(option => option.value === newSale.customerId)?.text || 'Unknown Customer';
                 const productName = productOptions.find(option => option.value === newSale.productId)?.text || 'Unknown Product';
                 const storeName = storeOptions.find(option => option.value === newSale.storeId)?.text || 'Unknown Store';
-
                 const addedSale = {
                     ...newSale,
                     id: responseId,
@@ -131,14 +135,12 @@ function SalesContainer() {
                 const customerName = customerOptions.find(option => option.value === newSale.customerId)?.text || 'Unknown Customer';
                 const productName = productOptions.find(option => option.value === newSale.productId)?.text || 'Unknown Product';
                 const storeName = storeOptions.find(option => option.value === newSale.storeId)?.text || 'Unknown Store';
-
                 const updatedSale = {
                     ...newSale,
                     customer: customerName,
                     product: productName,
                     store: storeName
                 };
-
                 setSales(prevSales =>
                     prevSales.map(sale =>
                         sale.id === currentSale.id ? { ...sale, ...updatedSale } : sale
@@ -164,11 +166,12 @@ function SalesContainer() {
                 setSales(prevSales => {
                     const undatedSales = prevSales.filter(sale => sale.id !== currentSale.id);
 
+                    // if the last customer on the last page is deleted, go back to the previous page
                     const totalPages = Math.ceil(undatedSales.length / pageSize);
                     if (currentPage >= totalPages) {
+                        // to avoid going to negative page numbers
                         setCurrentPage(totalPages > 0 ? totalPages - 1 : 0); 
                     }
-
                     return undatedSales;
                 });
                 setDeleteModal(false);
@@ -192,6 +195,7 @@ function SalesContainer() {
     const openEditModal = (sale) => {
         setCurrentSale(sale);
 
+        // format the date to NZT
         const formattedDateSold = formatDateToNZT(sale.dateSold);
         const dateFormatedSale = {
             ...sale,
@@ -214,29 +218,30 @@ function SalesContainer() {
         }));
     };
 
+    // map customer, product, and store data to options for dropdown menu
     const customerOptions = customers.map((customer, index) => ({
         key: index,
         text: customer.name,
         value: customer.id
     }))
-
     const productOptions = products.map((product, index) => ({
         key: index,
         text: product.name,
         value: product.id
     }))
-
     const storeOptions = stores.map((store, index) => ({
         key: index,
         text: store.name,
         value: store.id
     }))
 
+    //format Date data for Table display, eg. 11 Jan 2024
     const formatDateForTable = (time) => {
         const date = new Date(time);
         return new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium', timeZone: 'Pacific/Auckland', }).format(date)
     };
 
+    //format Date data TO NZT for html datePicker to , eg. 2024-01-11
     const formatDateToNZT = (dateString) => {
         const date = new Date(dateString);
         // format the date to NZT
@@ -252,6 +257,7 @@ function SalesContainer() {
         return formattedDate;
     };
 
+    //format Date data for API, eg. 2024-01-11T00:00:00
     const formatDateSale = (saleData) => {
         const dateString = saleData.dateSold;
         const formattedDate = formatDateToNZT(dateString);
@@ -350,6 +356,7 @@ function SalesContainer() {
                 </TableFooter>
             </Table>
 
+            {/* Create Modal */}
             <Modal
                 onClose={() => setCreateModal(false)}
                 onOpen={() => setCreateModal(true)}
@@ -411,6 +418,7 @@ function SalesContainer() {
                 </ModalActions>
             </Modal>
 
+            {/* Edit Modal */}
             <Modal
                 onClose={() => setEditModal(false)}
                 onOpen={() => setEditModal(true)}
@@ -472,6 +480,7 @@ function SalesContainer() {
                 </ModalActions>
             </Modal>
 
+            {/* Delete Confirmation Modal */}
             <Modal
                 onClose={() => setDeleteModal(false)}
                 onOpen={() => setDeleteModal(true)}

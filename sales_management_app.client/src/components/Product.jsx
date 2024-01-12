@@ -21,7 +21,10 @@ import {
 
 
 function ProductContainer() {
+    //use custom hook to handle CRUD operations
     const { add, update, remove, loading, error, setErrorState, setLoadingState } = useCRUDOperations('https://localhost:7293/api/product');
+
+    //state management for modals, product data, and current/new product details
     const [createModal, setCreateModal] = useState(false);
     const [editModal, setEditModal] = useState(false);
     const [deleteModal, setDeleteModal] = useState(false);
@@ -29,6 +32,7 @@ function ProductContainer() {
     const [currentProduct, setCurrentProduct] = useState({ name: "", price: 0.00 });
     const [newProduct, setNewProduct] = useState({ name: "", price: 0.00 });
 
+    //use custom hook to handle sorting and pagination
     const {
         sortedData: sortedProducts,
         currentPage,
@@ -39,6 +43,7 @@ function ProductContainer() {
         sortDirection,
         handleSort } = useSortedPaginatedData(products);
 
+    //fetch product data from API
     useEffect(() => {
         const fetchData = async () => {
             setLoadingState(true);
@@ -85,11 +90,12 @@ function ProductContainer() {
                 setProducts(prevProducts => {
                     const updatedProducts = prevProducts.filter(product => product.id !== currentProduct.id)
 
+                    // if the last customer on the last page is deleted, go back to the previous page
                     const totalPages = Math.ceil(updatedProducts.length / pageSize)
                     if (currentPage >= totalPages) {
+                        // to avoid going to negative page numbers
                         setCurrentPage(totalPages > 0 ? totalPages - 1 : 0); 
                     }
-
                     return updatedProducts;
                 }
                 );
@@ -115,13 +121,16 @@ function ProductContainer() {
         setDeleteModal(true);
     };
 
+    //handle input changes
     const handleChange = (e, data) => {
         const { name, value: rawValue } = data || e.target;
         let value = rawValue;
         if (name === 'price') {
+            // remove leading zeros but allow for leading zero if value is between 0 and 1
             if (value && value.startsWith('0') && !value.startsWith('0.')) {
                 value = value.replace(/^0+/, '');
             }
+            // disable negative number
             if (!value.includes('.') && value !== '') {
                 const numericValue = parseFloat(value);
                 value = numericValue >= 0 ? numericValue : 0;
@@ -132,6 +141,7 @@ function ProductContainer() {
         }));
     };
 
+    //format currency for table display
     const formatCurrency = (value) => {
         return new Intl.NumberFormat('en-NZ', { style: 'currency', currency: 'NZD' }).format(value);
     };
@@ -212,6 +222,7 @@ function ProductContainer() {
                 </TableFooter>
             </Table>
 
+            {/* Create Modal */}
             <Modal
                 onClose={() => setCreateModal(false)}
                 onOpen={() => setCreateModal(true)}
@@ -253,6 +264,7 @@ function ProductContainer() {
                 </ModalActions>
             </Modal>
 
+            {/* Edit Modal */}
             <Modal
                 onClose={() => setEditModal(false)}
                 onOpen={() => setEditModal(true)}
@@ -291,6 +303,7 @@ function ProductContainer() {
                 </ModalActions>
             </Modal>
 
+            {/* Delete Confirmation Modal */}
             <Modal
                 onClose={() => setDeleteModal(false)}
                 onOpen={() => setDeleteModal(true)}

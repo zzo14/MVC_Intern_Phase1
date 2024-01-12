@@ -20,7 +20,10 @@ import {
 } from "semantic-ui-react";
 
 function StoreContainer() {
+    //use custom hook to handle CRUD operations
     const { add, update, remove, loading, error, setErrorState, setLoadingState } = useCRUDOperations('https://localhost:7293/api/store');
+
+    //state management for modals, store data, and current/new store details
     const [createModal, setCreateModal] = useState(false);
     const [editModal, setEditModal] = useState(false);
     const [deleteModal, setDeleteModal] = useState(false);
@@ -28,6 +31,7 @@ function StoreContainer() {
     const [currentStore, setCurrentStore] = useState({name: "", address: ""});
     const [newStore, setNewStore] = useState({ name: "", address: "" });
 
+    //use custom hook to handle sorting and pagination
     const {
         sortedData: sortedStores,
         currentPage,
@@ -38,26 +42,28 @@ function StoreContainer() {
         sortDirection,
         handleSort } = useSortedPaginatedData(stores);
 
+    // Fetch data on component mount or when pagination/sorting changes
     useEffect(() => {
+        const fetchData = async () => {
+            setLoadingState(true);
+            setErrorState('');
+            try {
+                const response = await axios.get("https://localhost:7293/api/store");
+                const { data } = response;
+                setStores(data);
+                setLoadingState(false);
+            } catch (error) {
+                setErrorState('There is no store data, Please create one.', error.message);
+            }
+        };
         fetchData();
     }, [currentPage, pageSize]);
 
-    const fetchData = async () => {
-        setLoadingState(true);
-        setErrorState('');
-        try {
-            const response = await axios.get("https://localhost:7293/api/store");
-            const { data } = response;
-            setStores(data);
-            setLoadingState(false);
-        } catch (error) {
-            setErrorState('There is no store data, Please create one.', error.message);
-        }
-    };
-
+    //to handle adding a new store
     const handleAddStore = async () => {
         add(newStore,
             (responseId) => {
+                //update the new store to the stores array
                 const addedStore = { ...newStore, id: responseId };
                 setStores(prevStores => [...prevStores, addedStore]);
                 setCreateModal(false);
@@ -65,6 +71,7 @@ function StoreContainer() {
         );
     };
 
+    //to handle updating a store
     const handleUpdateStore = async () => {
         update(newStore,
             () => {
@@ -79,17 +86,19 @@ function StoreContainer() {
         );
     };
 
+    //to handle deleting a store
     const handleDeleteStore = async () => {
         remove(currentStore.id,
             () => {
                 setStores(prevStores => {
                     const updatedStores = prevStores.filter(store => store.id !== currentStore.id);
 
+                    // if the last customer on the last page is deleted, go back to the previous page
                     const totalPages = Math.ceil(updatedStores.length / pageSize);
                     if (currentPage >= totalPages) {
+                        // to avoid going to negative page numbers
                         setCurrentPage(totalPages > 0 ? totalPages - 1 : 0); 
                     }
-
                     return updatedStores;
                 });
                 setDeleteModal(false);
@@ -197,6 +206,7 @@ function StoreContainer() {
                 </TableFooter>
             </Table>
 
+            {/* Create Modal */}
             <Modal
                 onClose={() => setCreateModal(false)}
                 onOpen={() => setCreateModal(true)}
@@ -236,6 +246,7 @@ function StoreContainer() {
                 </ModalActions>
             </Modal>
 
+            {/* Edit Modal */}
             <Modal
                 onClose={() => setEditModal(false)}
                 onOpen={() => setEditModal(true)}
@@ -271,6 +282,7 @@ function StoreContainer() {
                 </ModalActions>
             </Modal>
 
+            {/* Delete Confirmation Modal */}
             <Modal
                 onClose={() => setDeleteModal(false)}
                 onOpen={() => setDeleteModal(true)}

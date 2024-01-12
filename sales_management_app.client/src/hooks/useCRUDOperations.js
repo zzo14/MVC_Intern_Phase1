@@ -14,6 +14,7 @@ const useCRUDOperations = (apiUrl) => {
         setLoading(isLoading);
     };
 
+    // The following functions are used to perform CRUD operations on the server.
     const add = async (data, onSuccess, onError) => {
         setLoading(true);
         try {

@@ -6,6 +6,7 @@ const useSortedPaginatedData = (data, defaultSortColumn) => {
   const [pageSize, setPageSize] = useState(10);
   const [currentPage, setCurrentPage] = useState(0);
 
+  // Sort data
   const sortedData = useMemo(() => {
     if (!sortColumn) {
       return data;
@@ -21,12 +22,14 @@ const useSortedPaginatedData = (data, defaultSortColumn) => {
     });
   }, [data, sortColumn, sortDirection]);
 
+  // Paginate sorted data
   const paginatedData = useMemo(() => {
     const firstPageIndex = currentPage * pageSize;
     const lastPageIndex = firstPageIndex + pageSize;
     return sortedData.slice(firstPageIndex, lastPageIndex);
   }, [pageSize, currentPage, sortedData]);
 
+ 
   const handleSort = (clickedColumn) => {
     if (sortColumn !== clickedColumn) {
       setSortColumn(clickedColumn);
@@ -34,6 +37,7 @@ const useSortedPaginatedData = (data, defaultSortColumn) => {
       return;
     }
 
+    // If the same column is clicked, reverse the sort direction or remove sort
     switch (sortDirection) {
       case 'ascending':
         setSortDirection('descending');
