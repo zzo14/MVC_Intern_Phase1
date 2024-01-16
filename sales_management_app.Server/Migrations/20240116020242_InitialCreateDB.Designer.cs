@@ -12,8 +12,8 @@ using sale_management_app.Models;
 namespace sales_management_app.Server.Migrations
 {
     [DbContext(typeof(SalesDBContext))]
-    [Migration("20240111005003_salesModify")]
-    partial class salesModify
+    [Migration("20240116020242_InitialCreateDB")]
+    partial class InitialCreateDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
