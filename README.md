@@ -18,14 +18,20 @@ This project is the MVC Studio Onboarding task. This application allows users to
 - `sales_management_app.Server`: Contains the backend .NET Core Web API.
 
 ## Snapshots
-#### Sales page
-![Customer Creation Form](/show_pics/main.png)
 
-#### Create a new sale
-![Customer Creation Form](/show_pics/create.png)
+### Sales Page
+![Sales Page Main View](/show_pics/main.png)
+Here is the main view of the Sales page, displaying all sales records.
 
-#### Edit a exist sale
-![Customer Creation Form](/show_pics/edit.png)
+### Create a New Sale
+![Create Sale Modal](/show_pics/create.png)
+This modal pops up when creating a new sale entry.
 
-#### Delete a sale
-![Customer Creation Form](/show_pics/delete.png)
+### Edit an Existing Sale
+![Edit Sale Modal](/show_pics/edit.png)
+Here you can see the edit modal prefilled with the sale's existing details.
+
+### Delete a Sale
+![Delete Sale Confirmation](/show_pics/delete.png)
+This is the confirmation dialogue that appears when you attempt to delete a sale.
+
