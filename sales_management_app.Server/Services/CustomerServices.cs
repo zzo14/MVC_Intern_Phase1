@@ -7,12 +7,12 @@ using System.Net;
 
 namespace sales_management_app.Server.Services
 {
-    public class CustromerServices : ICustomerServices
+    public class CustomerServices : ICustomerServices
     {
         private readonly SalesDBContext _context;
         private readonly IMapper _mapper;
 
-        public CustromerServices(SalesDBContext context, IMapper mapper)
+        public CustomerServices(SalesDBContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

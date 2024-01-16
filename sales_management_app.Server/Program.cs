@@ -13,7 +13,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddDbContext<SalesDBContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddScoped<ICustomerServices, CustromerServices>();
+builder.Services.AddScoped<ICustomerServices, CustomerServices>();
 builder.Services.AddScoped<IProductServices, ProductServices>();
 builder.Services.AddScoped<IStoreServices, StoreServices>();
 builder.Services.AddScoped<ISalesServices, SalesServices>();
@@ -52,7 +52,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

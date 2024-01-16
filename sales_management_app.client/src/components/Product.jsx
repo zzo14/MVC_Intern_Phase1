@@ -19,10 +19,11 @@ import {
     Form
 } from "semantic-ui-react";
 
-
 function ProductContainer() {
+    const azureApiUrl = 'https://salesmanagementwebapp.azurewebsites.net/api/product';
+
     //use custom hook to handle CRUD operations
-    const { add, update, remove, loading, error, setErrorState, setLoadingState } = useCRUDOperations('https://salesmanagementwebapp.azurewebsites.net/api/product');
+    const { add, update, remove, loading, error, setErrorState, setLoadingState } = useCRUDOperations(azureApiUrl);
 
     //state management for modals, product data, and current/new product details
     const [createModal, setCreateModal] = useState(false);
@@ -49,7 +50,7 @@ function ProductContainer() {
             setLoadingState(true);
             setErrorState('');
             try {
-                const response = await axios.get("https://localhost:7293/api/product");
+                const response = await axios.get(azureApiUrl);
                 const { data } = response;
                 setProducts(data);
                 setLoadingState(false);
@@ -172,54 +173,59 @@ function ProductContainer() {
                 </Table.Header>
 
                 <Table.Body>
-                    {sortedProducts.map(product => (
-                        <Table.Row key={product.id}>
-                            <Table.Cell>{product.name}</Table.Cell>
-                            <Table.Cell>{formatCurrency(product.price)}</Table.Cell>
-                            <Table.Cell>
-                                <Button color="yellow" icon='edit' content='Edit' onClick={() => openEditModal(product)} />
-                            </Table.Cell>
-                            <Table.Cell>
-                                <Button icon="trash" content="Delete" onClick={() => openDeleteModal(product)} negative />
-                            </Table.Cell>
+                    {sortedProducts.length > 0 ? (
+                        sortedProducts.map(product => (
+                            <Table.Row key={product.id}>
+                                <Table.Cell>{product.name}</Table.Cell>
+                                <Table.Cell>{formatCurrency(product.price)}</Table.Cell>
+                                <Table.Cell>
+                                    <Button color="yellow" icon='edit' content='Edit' onClick={() => openEditModal(product)} />
+                                </Table.Cell>
+                                <Table.Cell>
+                                    <Button icon="trash" content="Delete" onClick={() => openDeleteModal(product)} negative />
+                                </Table.Cell>
+                            </Table.Row>
+                        ))
+                    ) : (
+                        <Table.Row>
+                            <Table.Cell>No product data, please create one.</Table.Cell>
                         </Table.Row>
-                    ))}
+                    )}
                 </Table.Body>
 
-                <TableFooter>
-                    <TableRow>
-                        <TableHeaderCell>
-                            <Menu floated='left'>
-                                <Menu.Item>
-                                    <select
-                                        value={pageSize}
-                                        onChange={(e) => setPageSize(Number(e.target.value))}>
-                                        {[10, 20, 30, 40, 50].map(size => (
-                                            <option key={size} value={size}>
-                                                {size}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </Menu.Item>
-                            </Menu>
-                        </TableHeaderCell>
-
-
-                        <TableHeaderCell colSpan='4'>
-                            <Menu floated='right' pagination>
-                                {Array.from({ length: Math.ceil(products.length / pageSize) }, (_, index) => (
-                                    <MenuItem
-                                        as='a'
-                                        key={index}
-                                        active={currentPage === index}
-                                        onClick={() => setCurrentPage(index)}>
-                                        {index + 1}
-                                    </MenuItem>
-                                ))}
-                            </Menu>
-                        </TableHeaderCell>
-                    </TableRow>
-                </TableFooter>
+                {sortedProducts.length > 0 && (
+                    <TableFooter>
+                        <TableRow>
+                            <TableHeaderCell>
+                                <Menu floated='left'>
+                                    <Menu.Item>
+                                        <select
+                                            value={pageSize}
+                                            onChange={(e) => setPageSize(Number(e.target.value))}>
+                                            {[10, 20, 30, 40, 50].map(size => (
+                                                <option key={size} value={size}>
+                                                    {size}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </Menu.Item>
+                                </Menu>
+                            </TableHeaderCell>
+                            <TableHeaderCell colSpan='4'>
+                                <Menu floated='right' pagination>
+                                    {Array.from({ length: Math.ceil(products.length / pageSize) }, (_, index) => (
+                                        <MenuItem
+                                            as='a'
+                                            key={index}
+                                            active={currentPage === index}
+                                            onClick={() => setCurrentPage(index)}>
+                                            {index + 1}
+                                        </MenuItem>
+                                    ))}
+                                </Menu>
+                            </TableHeaderCell>
+                        </TableRow>
+                    </TableFooter>)}
             </Table>
 
             {/* Create Modal */}

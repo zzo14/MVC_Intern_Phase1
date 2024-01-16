@@ -22,8 +22,13 @@ import {
 } from "semantic-ui-react";
 
 function SalesContainer() {
+    const salesAzureApiUrl = 'https://salesmanagementwebapp.azurewebsites.net/api/sales';
+    const productAzureApiUrl = 'https://salesmanagementwebapp.azurewebsites.net/api/product';
+    const customerAzureApiUrl = 'https://salesmanagementwebapp.azurewebsites.net/api/customer';
+    const storeAzureApiUrl = 'https://salesmanagementwebapp.azurewebsites.net/api/store';
+
     //use custom hook to handle CRUD operations
-    const { add, update, remove, loading, error, setErrorState, setLoadingState } = useCRUDOperations('https://salesmanagementwebapp.azurewebsites.net/api/sales');
+    const { add, update, remove, loading, error, setErrorState, setLoadingState } = useCRUDOperations(salesAzureApiUrl);
 
     //state management for modals, data, and current/new sale details
     const [createModal, setCreateModal] = useState(false);
@@ -70,9 +75,9 @@ function SalesContainer() {
             setErrorState('');
             try {
                 const [customersResponse, productsResponse, storesResponse] = await Promise.all([
-                    axios.get("https://localhost:7293/api/customer"),
-                    axios.get("https://localhost:7293/api/product"),
-                    axios.get("https://localhost:7293/api/store"),
+                    axios.get(customerAzureApiUrl),
+                    axios.get(productAzureApiUrl),
+                    axios.get(storeAzureApiUrl),
                 ]);
 
                 const customersData = customersResponse.data;
@@ -304,56 +309,61 @@ function SalesContainer() {
                 </Table.Header>
 
                 <Table.Body>
-                    {sortedSales.map(sale => (
-                        <Table.Row key={sale.id}>
-                            <Table.Cell>{sale.customer}</Table.Cell>
-                            <Table.Cell>{sale.product}</Table.Cell>
-                            <Table.Cell>{sale.store}</Table.Cell>
-                            <Table.Cell>{formatDateForTable(sale.dateSold)}</Table.Cell>
-                            <Table.Cell>
-                                <Button color="yellow" icon='edit' content='Edit' onClick={() => openEditModal(sale)} />
-                            </Table.Cell>
-                            <Table.Cell>
-                                <Button icon="trash" content="Delete" negative onClick={() => openDeleteModal(sale)} />
-                            </Table.Cell>
+                    {sortedSales.length > 0 ? (
+                        sortedSales.map(sale => (
+                            <Table.Row key={sale.id}>
+                                <Table.Cell>{sale.customer}</Table.Cell>
+                                <Table.Cell>{sale.product}</Table.Cell>
+                                <Table.Cell>{sale.store}</Table.Cell>
+                                <Table.Cell>{formatDateForTable(sale.dateSold)}</Table.Cell>
+                                <Table.Cell>
+                                    <Button color="yellow" icon='edit' content='Edit' onClick={() => openEditModal(sale)} />
+                                </Table.Cell>
+                                <Table.Cell>
+                                    <Button icon="trash" content="Delete" negative onClick={() => openDeleteModal(sale)} />
+                                </Table.Cell>
+                            </Table.Row>
+                        ))
+                    ) : (
+                        <Table.Row>
+                            <Table.Cell colSpan="4">No sale data, please create one.</Table.Cell>
                         </Table.Row>
-                    ))}
+                    )}
                 </Table.Body>
 
-                <TableFooter>
-                    <TableRow>
-                        <TableHeaderCell>
-                            <Menu floated='left'>
-                                <Menu.Item>
-                                    <select
-                                        value={pageSize}
-                                        onChange={(e) => setPageSize(Number(e.target.value))}>
-                                        {[10, 20, 30, 40, 50].map(size => (
-                                            <option key={size} value={size}>
-                                                {size}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </Menu.Item>
-                            </Menu>
-                        </TableHeaderCell>
-
-
-                        <TableHeaderCell colSpan='5'>
-                            <Menu floated='right' pagination>
-                                {Array.from({ length: Math.ceil(sales.length / pageSize) }, (_, index) => (
-                                    <MenuItem
-                                        as='a'
-                                        key={index}
-                                        active={currentPage === index}
-                                        onClick={() => setCurrentPage(index)}>
-                                        {index + 1}
-                                    </MenuItem>
-                                ))}
-                            </Menu>
-                        </TableHeaderCell>
-                    </TableRow>
-                </TableFooter>
+                {sortedSales.length > 0 && (
+                    <TableFooter>
+                        <TableRow>
+                            <TableHeaderCell>
+                                <Menu floated='left'>
+                                    <Menu.Item>
+                                        <select
+                                            value={pageSize}
+                                            onChange={(e) => setPageSize(Number(e.target.value))}>
+                                            {[10, 20, 30, 40, 50].map(size => (
+                                                <option key={size} value={size}>
+                                                    {size}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </Menu.Item>
+                                </Menu>
+                            </TableHeaderCell>
+                            <TableHeaderCell colSpan='5'>
+                                <Menu floated='right' pagination>
+                                    {Array.from({ length: Math.ceil(sales.length / pageSize) }, (_, index) => (
+                                        <MenuItem
+                                            as='a'
+                                            key={index}
+                                            active={currentPage === index}
+                                            onClick={() => setCurrentPage(index)}>
+                                            {index + 1}
+                                        </MenuItem>
+                                    ))}
+                                </Menu>
+                            </TableHeaderCell>
+                        </TableRow>
+                    </TableFooter>)}
             </Table>
 
             {/* Create Modal */}

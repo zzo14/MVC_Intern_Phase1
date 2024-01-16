@@ -20,8 +20,10 @@ import {
 } from "semantic-ui-react";
 
 function StoreContainer() {
+    const azureApiUrl = 'https://salesmanagementwebapp.azurewebsites.net/api/store';
+
     //use custom hook to handle CRUD operations
-    const { add, update, remove, loading, error, setErrorState, setLoadingState } = useCRUDOperations('https://salesmanagementwebapp.azurewebsites.net/api/store');
+    const { add, update, remove, loading, error, setErrorState, setLoadingState } = useCRUDOperations(azureApiUrl);
 
     //state management for modals, store data, and current/new store details
     const [createModal, setCreateModal] = useState(false);
@@ -48,7 +50,7 @@ function StoreContainer() {
             setLoadingState(true);
             setErrorState('');
             try {
-                const response = await axios.get("https://localhost:7293/api/store");
+                const response = await axios.get(azureApiUrl);
                 const { data } = response;
                 setStores(data);
                 setLoadingState(false);
@@ -156,54 +158,60 @@ function StoreContainer() {
                 </Table.Header>
 
                 <Table.Body>
-                    {sortedStores.map(store => (
-                        <Table.Row key={store.id}>
-                            <Table.Cell>{store.name}</Table.Cell>
-                            <Table.Cell>{store.address}</Table.Cell>
-                            <Table.Cell>
-                                <Button color="yellow" icon='edit' content='Edit' onClick={() => openEditModal(store) } />
-                            </Table.Cell>
-                            <Table.Cell>
-                                <Button icon="trash" content="Delete" onClick={() => openDeleteModal(store)} negative />
-                            </Table.Cell>
+                    {sortedStores.length > 0 ? (
+                        sortedStores.map(store => (
+                            <Table.Row key={store.id}>
+                                <Table.Cell>{store.name}</Table.Cell>
+                                <Table.Cell>{store.address}</Table.Cell>
+                                <Table.Cell>
+                                    <Button color="yellow" icon='edit' content='Edit' onClick={() => openEditModal(store)} />
+                                </Table.Cell>
+                                <Table.Cell>
+                                    <Button icon="trash" content="Delete" onClick={() => openDeleteModal(store)} negative />
+                                </Table.Cell>
+                            </Table.Row>
+                        ))
+                    ) : (
+                        <Table.Row>
+                            <Table.Cell colSpan='4'>No store data, please create one.</Table.Cell>
                         </Table.Row>
-                    ))}
+
+                    )}
                 </Table.Body>
 
-                <TableFooter>
-                    <TableRow>
-                        <TableHeaderCell>
-                            <Menu floated='left'>
-                                <Menu.Item>
-                                    <select
-                                        value={pageSize}
-                                        onChange={(e) => setPageSize(Number(e.target.value))}>
-                                        {[10, 20, 30, 40, 50].map(size => (
-                                            <option key={size} value={size}>
-                                                {size}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </Menu.Item>
-                            </Menu>
-                        </TableHeaderCell>
-
-
-                        <TableHeaderCell colSpan='4'>
-                            <Menu floated='right' pagination>
-                                {Array.from({ length: Math.ceil(stores.length / pageSize) }, (_, index) => (
-                                    <MenuItem
-                                        as='a'
-                                        key={index}
-                                        active={currentPage === index}
-                                        onClick={() => setCurrentPage(index)}>
-                                        {index + 1}
-                                    </MenuItem>
-                                ))}
-                            </Menu>
-                        </TableHeaderCell>
-                    </TableRow>
-                </TableFooter>
+                {sortedStores.length > 0 && (
+                    <TableFooter>
+                        <TableRow>
+                            <TableHeaderCell>
+                                <Menu floated='left'>
+                                    <Menu.Item>
+                                        <select
+                                            value={pageSize}
+                                            onChange={(e) => setPageSize(Number(e.target.value))}>
+                                            {[10, 20, 30, 40, 50].map(size => (
+                                                <option key={size} value={size}>
+                                                    {size}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </Menu.Item>
+                                </Menu>
+                            </TableHeaderCell>
+                            <TableHeaderCell colSpan='4'>
+                                <Menu floated='right' pagination>
+                                    {Array.from({ length: Math.ceil(stores.length / pageSize) }, (_, index) => (
+                                        <MenuItem
+                                            as='a'
+                                            key={index}
+                                            active={currentPage === index}
+                                            onClick={() => setCurrentPage(index)}>
+                                            {index + 1}
+                                        </MenuItem>
+                                    ))}
+                                </Menu>
+                            </TableHeaderCell>
+                        </TableRow>
+                    </TableFooter>)}
             </Table>
 
             {/* Create Modal */}
