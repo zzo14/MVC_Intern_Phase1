@@ -47,8 +47,9 @@ export default defineConfig({
     server: {
         proxy: {
             '^/weatherforecast': {
-                target: 'https://localhost:7293/',
-                secure: false
+                target: 'https://salesmanagementwebapp.azurewebsites.net',
+                secure: true,
+                changeOrigin: true,
             }
         },
         port: 5173,
