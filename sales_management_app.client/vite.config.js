@@ -52,10 +52,6 @@ export default defineConfig({
                 changeOrigin: true,
             }
         },
-        port: 5173,
-        https: {
-            key: fs.readFileSync(keyFilePath),
-            cert: fs.readFileSync(certFilePath),
-        }
+        port: 5173
     }
 })

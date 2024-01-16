@@ -88,7 +88,7 @@ function SalesContainer() {
                 setProducts(productsData)
                 setStores(storesData)
 
-                const response = await axios.get("https://localhost:7293/api/sales");
+                const response = await axios.get(salesAzureApiUrl);
                 const salesData = response.data;
 
                 //map sales data to include customer, product, and store names
