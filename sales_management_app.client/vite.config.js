@@ -43,15 +43,5 @@ export default defineConfig({
         alias: {
             '@': fileURLToPath(new URL('./src', import.meta.url))
         }
-    },
-    server: {
-        proxy: {
-            '^/weatherforecast': {
-                target: 'https://salesmanagementwebapp.azurewebsites.net',
-                secure: true,
-                changeOrigin: true,
-            }
-        },
-        port: 5173
     }
 })
