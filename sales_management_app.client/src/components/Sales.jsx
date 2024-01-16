@@ -23,7 +23,7 @@ import {
 
 function SalesContainer() {
     //use custom hook to handle CRUD operations
-    const { add, update, remove, loading, error, setErrorState, setLoadingState } = useCRUDOperations('https://localhost:7293/api/sales');
+    const { add, update, remove, loading, error, setErrorState, setLoadingState } = useCRUDOperations('https://salesmanagementwebapp.azurewebsites.net/api/sales');
 
     //state management for modals, data, and current/new sale details
     const [createModal, setCreateModal] = useState(false);
