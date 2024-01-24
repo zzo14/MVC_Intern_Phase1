@@ -1,4 +1,4 @@
-# MVC_Intern_Phase1
+# MVC_Intern_Phase1 - Onboarding task
  
 ## Introduction
 This project is the MVC Studio Onboarding task. This application allows users to create, edit, and delete customer, product, and store records alongside managing their sales data.
