@@ -9,7 +9,7 @@ This project is the MVC Studio Onboarding task. This application allows users to
 - **Delete**: Remove data records from the system.
 - **Sales Tracking**: Monitor and record sales transactions.
  
-- ## Technology Stack
+## Technology Stack
 - **Frontend**: React.js for building dynamic user interface, using ES6 classes and JSX, Semantic-UI-React for UI components, and AJAX for API calls.
 - **Backend**: ASP.NET Core with MVC architecture for handling CRUD operations, utilizing Data Annotations for model validation and defining the database schema through Entity Framework Code-First approach.
 
