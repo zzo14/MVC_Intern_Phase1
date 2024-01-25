@@ -17,6 +17,14 @@ This project is the MVC Studio Onboarding task. This application allows users to
 - `sales_management_app.client`: Contains the front-end React application.
 - `sales_management_app.Server`: Contains the backend .NET Core Web API.
 
+## Installation
+- 1. Open terminal.
+- 2. Navigate into the client directory: `cd sales_management_app.client`.
+- 3. Install Dependencies: Inside the project directory, install the necessary dependencies using npm: `npm install`.
+- 4. Go back to the project root directory and Navigate to the Server Project Directory: `cd sales_management_app.Server`.
+- 5. Build the Project: Use the .NET Core CLI to build the project: `dotnet build`
+- 6. Run the Application: Finally, run the application: `dotnet run`.
+
 ## Snapshots
 
 ### Sales Page
