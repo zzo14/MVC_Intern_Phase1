@@ -3,6 +3,9 @@
 ## Introduction
 This project is the MVC Studio Onboarding task. This application allows users to create, edit, and delete customer, product, and store records alongside managing their sales data.
 
+## Live Demo
+Check out our live application here: [Sales Management Console](https://salesmanagementappclient.z8.web.core.windows.net/)
+
 ## Features
 - **Create**: Add new data records with all necessary details.
 - **Edit**: Update existing data information.
