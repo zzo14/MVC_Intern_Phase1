@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy ASP.Net Core app to Azure Web App - SalesManagementWebApp
+name: Build and deploy ASP.Net Core app to Azure Web App - OnboardingSalesManagementAPI
 
 on:
   push:
@@ -40,27 +40,18 @@ jobs:
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    permissions:
-      id-token: write #This is required for requesting the JWT
 
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
           name: .net-app
-      
-      - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_DF25CEC3ACE542238C459FD761A0BF36 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_4A7E2204EFA34FC9AAFB478E05C20192 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_EAAF369FF7BE4D449DF23274B5D47473 }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'SalesManagementWebApp'
+          app-name: 'OnboardingSalesManagementAPI'
           slot-name: 'Production'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_70D3DAD9979A4B5AA60C825C86A29648 }}
           package: .
-          
