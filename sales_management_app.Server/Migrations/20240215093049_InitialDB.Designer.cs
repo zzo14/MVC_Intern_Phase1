@@ -12,15 +12,15 @@ using sale_management_app.Models;
 namespace sales_management_app.Server.Migrations
 {
     [DbContext(typeof(SalesDBContext))]
-    [Migration("20240116020242_InitialCreateDB")]
-    partial class InitialCreateDB
+    [Migration("20240215093049_InitialDB")]
+    partial class InitialDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.0")
+                .HasAnnotation("ProductVersion", "8.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
