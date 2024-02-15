@@ -22,10 +22,10 @@ import {
 } from "semantic-ui-react";
 
 function SalesContainer() {
-    const salesAzureApiUrl = 'https://salesmanagementwebapp.azurewebsites.net/api/sales';
-    const productAzureApiUrl = 'https://salesmanagementwebapp.azurewebsites.net/api/product';
-    const customerAzureApiUrl = 'https://salesmanagementwebapp.azurewebsites.net/api/customer';
-    const storeAzureApiUrl = 'https://salesmanagementwebapp.azurewebsites.net/api/store';
+    const salesAzureApiUrl = 'https://onboardingsalesmanagementapi.azurewebsites.net/api/sales';
+    const productAzureApiUrl = 'https://onboardingsalesmanagementapi.azurewebsites.net/api/product';
+    const customerAzureApiUrl = 'https://onboardingsalesmanagementapi.azurewebsites.net/api/customer';
+    const storeAzureApiUrl = 'https://onboardingsalesmanagementapi.azurewebsites.net/api/store';
 
     //use custom hook to handle CRUD operations
     const { add, update, remove, loading, error, setErrorState, setLoadingState } = useCRUDOperations(salesAzureApiUrl);

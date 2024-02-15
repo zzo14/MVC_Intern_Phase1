@@ -20,7 +20,7 @@ import {
 } from "semantic-ui-react";
 
 function StoreContainer() {
-    const azureApiUrl = 'https://salesmanagementwebapp.azurewebsites.net/api/store';
+    const azureApiUrl = 'https://onboardingsalesmanagementapi.azurewebsites.net/api/store';
 
     //use custom hook to handle CRUD operations
     const { add, update, remove, loading, error, setErrorState, setLoadingState } = useCRUDOperations(azureApiUrl);
